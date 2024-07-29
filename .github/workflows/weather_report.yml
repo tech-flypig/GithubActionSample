@@ -3,25 +3,32 @@
 
 name: 天气预报推送
 
+#on:触发方法
 on:
+  # 定时触发
   schedule:
     # 设置启动时间，为 UTC 时间, UTC23点 对应北京时间早7点
     - cron : '00 23 * * *'
+    #手动触发
   workflow_dispatch:
 
 permissions:
   contents: read
-
+  
+#jobs:任务集 可有多个job
 jobs:
   build:
-
+#runs-on：申请ubuntu虚拟机
     runs-on: ubuntu-latest
     env:
       TZ: Asia/Shanghai
+    #step步骤
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python 3.12
+    #uses:使用别人的脚本
       uses: actions/setup-python@v3
+      #with:给上面的脚本传递一些参数
       with:
         python-version: "3.12"
     - name: Install dependencies
@@ -31,6 +38,7 @@ jobs:
     - name: Run weather Report
       run: |
         python weather_report.py
+        #env:将github配置的参数传递到脚本中，让脚本去获取
       env:
         APP_ID: ${{ secrets.APP_ID }}
         APP_SECRET: ${{ secrets.APP_SECRET }}
